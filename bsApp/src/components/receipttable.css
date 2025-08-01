@@ -1,0 +1,56 @@
+/* Container styling */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  background: transparent;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+}
+
+/* Header cells */
+.grid-container > .header {
+  font-weight: 700;
+  text-align: center;
+  background: rgba(255 255 255 / 0.15);
+  padding: 12px 0;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.grid-container > .header:hover {
+  background: rgba(255 255 255 / 0.3);
+}
+
+/* Data cells */
+.grid-container > .cell {
+  background: rgba(255 255 255 / 0.1);
+  padding: 16px 0;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeInUp 0.4s ease forwards;
+  cursor: default;
+}
+
+/* Hover effect on data cells */
+.grid-container > .cell:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.15);
+}
+
+/* Smooth fade-in & slide up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
