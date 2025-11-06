@@ -1,0 +1,15 @@
+.wrapper {
+    background-color: transparent;
+    width: 40rem;
+}
+
+.input {
+    background-color: transparent;
+    color: white;
+    font-size: 0.8rem
+}
+
+.input div button {
+    display: flex;
+    align-items: center;
+}

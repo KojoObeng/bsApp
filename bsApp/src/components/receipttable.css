@@ -1,24 +1,24 @@
 /* Container styling */
 .grid-container {
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   padding: 1rem;
   background: transparent;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #222;
+  color: #222; */
 }
 
 /* Header cells */
 .grid-container > .header {
-  font-weight: 700;
+  /* font-weight: 700;
   text-align: center;
   background: rgba(255 255 255 / 0.15);
   padding: 12px 0;
   border-radius: 8px;
   backdrop-filter: blur(10px);
   user-select: none;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease; */
 }
 
 .grid-container > .header:hover {
@@ -53,4 +53,80 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.scrollarea {
+  border-radius: 0.5rem;
+  height: 22rem;
+  width: 90rem
+}
+
+table {
+  text-align: center;
+  border-radius: 20rem;
+  height: 20rem;
+
+}
+
+table tr:nth-child(odd) {
+  text-align: center;
+  background-color: transparent;
+
+}
+
+table tr:nth-child(even) {
+  background-color: var(--table-highlight-on-hover-color);
+}
+
+
+.header {
+  position: sticky;
+  top: 0;
+  background-color: transparent;
+  transition: box-shadow 150ms ease;
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid white;
+  z-index: 5;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+
+/* header */
+thead tr th {
+  text-align: center !important;
+  background-color: var(--table-highlight-on-hover-color) !important;
+  border-bottom: 1px solid white !important;
+  z-index: 5;
+  justify-content: center;
+}
+
+thead tr th div  {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem
+}
+
+.scrolled {
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+.rows {
+  text-align: center;
+  color: white;
+}
+
+/* for checkbox alignment */
+tbody tr td div { 
+  display: flex;
+  justify-content: center;
 }

@@ -1,44 +1,61 @@
-import React, { type Dispatch, type SetStateAction } from 'react';
+import React, { useState, type Dispatch, type SetStateAction } from 'react';
+import { Pill, PillsInput } from '@mantine/core';
+import './names.css';
+import type { NameMatrix } from '../types/results';
 interface NameProps {
-  names: string[];
-  setNames: Dispatch<SetStateAction<string[]>>;
+  nameHook: [NameInfo[], Dispatch<SetStateAction<NameInfo[]>>];
+  nameMatrixHook: [NameMatrix, Dispatch<SetStateAction<NameMatrix>>];
+  handleNameRemove: (idxToRemove: string) => () => void;
 }
 
-function Names({names, setNames}: NameProps) {
-    const placeholdertext = "enter names with spaces ...";
-    const [enterPressed, setEnterPressed]= React.useState<boolean>(false);
+type NameInfo = {
+  id: string;
+  name: string;
+};
 
-    const onChange = (e: any) => {
-        const trimmedName = (e.currentTarget.textContent || "").trim();
+function Names({ nameHook, nameMatrixHook, handleNameRemove }: NameProps) {
+  const [currentName, setCurrentName] = useState('');
+  const [enteredNames, setEnteredNames] = nameHook;
+  const [nameMatrix, setNameMatrix] = nameMatrixHook; 
 
-        if (enterPressed) {
-            if (!names.includes(trimmedName)) {
-                setEnterPressed(false);
-                setNames(prev => [...prev, trimmedName]);
-                e.currentTarget.textContent ="";
-
-            }
-            else {
-                setEnterPressed(false);
-            }
-
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event?.currentTarget?.value.trimStart();
+    if (!inputValue) return;
+    if (inputValue.endsWith(' ')) {
+      const newNameID = crypto.randomUUID(); 
+      console.log('Adding name:', newNameID);
+      setEnteredNames((prev) => [
+        ...prev,
+        { id: newNameID, name: inputValue.split(' ')[0] },
+      ]);
+      setCurrentName('');
+    } else {
+      setCurrentName(inputValue);
     }
-}
+  };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === "Enter")  setEnterPressed(true);
-    }
+  const pills = enteredNames?.map((nameInfo) => (
+    <Pill
+      key={nameInfo.id}
+      withRemoveButton
+      onRemove={handleNameRemove(nameInfo.id)}
+    >
+      {nameInfo.name}
+    </Pill>
+  ));
 
   return (
-    <>
-    
-    <div className="flex justify-center items-center border-1 border-gray-600 rounded-xl bg-transparent text-center focus:outline-none text-xs h-[3rem] w-[100%]" contentEditable spellCheck={false} suppressContentEditableWarning={true} onInput={e => onChange(e)} onKeyDown={handleKeyDown}>
-              {/* {names === "" && (
-        <span className="absolute text-gray-400 pointer-events-none select-none focus:outline-none ">
-         {placeholdertext}
-        </span> */}
-    </div>
-  </>)
+    <PillsInput classNames={{ wrapper: 'wrapper', input: 'input' }}>
+      <Pill.Group>
+        {pills}
+        <PillsInput.Field
+          placeholder="enter names separated by spaces..."
+          value={currentName}
+          onChange={handleChange}
+        />
+      </Pill.Group>
+    </PillsInput>
+  );
 }
 
-export default Names
+export default Names;

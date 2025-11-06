@@ -1,52 +1,70 @@
-import { SegmentedControl, TextInput } from '@mantine/core';
+import { NumberInput, SegmentedControl, Text } from '@mantine/core';
 import { useState } from 'react';
+import './taxandtip.css';
 
 interface TaxAndTipProps {
-  taxValue: number;
-  tipValue: number;
+  // taxValueHook: number;
+  // tipValueHook: number;
 }
 
-
-function TaxAndTip({ taxValue, tipValue }: TaxAndTipProps) {
-    const [selected, setSelected] = useState('percentage');;
-    const [isTipPercentage, setIsTipPercentage] = useState<boolean>(true);
-    const [taxValue2, setTaxValue] = useState<number>(taxValue);
-    const [tipValue2, setTipValue] = useState<number>(tipValue);
+function TaxAndTip({
+  taxValueHook,
+  tipValueHook,
+  taxTypeHook,
+  tipTypeHook,
+}: TaxAndTipProps) {
+  const [selectedTaxType, setSelectedTaxType] = taxTypeHook;
+  const [selectedTipType, setSelectedTipType] = tipTypeHook;
+  const [taxValue, setTaxValue] = taxValueHook;
+  const [tipValue, setTipValue] = tipValueHook;
 
   return (
     <>
-
-    <div className="flex gap-4 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md w-fit">
-      {['percentage', 'amount'].map((option) => (
-        <label
-          key={option}
-          className={`cursor-pointer px-4 py-2 rounded-full text-sm font-medium border transition-all 
-            ${
-              selected === option
-                ? 'bg-green-500 text-white border-green-500 shadow-sm'
-                : 'bg-transparent text-gray-600 border-gray-300 hover:border-green-400 hover:text-green-600'
-            }`}
-        >
-          <input
-            type="radio"
-            name="mode"
-            value={option}
-            checked={selected === option}
-            onChange={() => setSelected(option)}
-            className="hidden"
+      <div className={'flex gap-10 justify-around w-[70rem]'}>
+        <div className={'section'}>
+          <Text size="sm" fw={500} mb={2}>
+            Tax
+          </Text>
+          <SegmentedControl
+            data={['Percentage', 'Amount']}
+            value={selectedTaxType}
+            transitionDuration={200}
+            transitionTimingFunction="linear"
+            onChange={setSelectedTaxType}
+          ></SegmentedControl>
+          <NumberInput
+            value={taxValue}
+            placeholder="Tax"
+            hideControls
+            decimalScale={2}
+            allowNegative={false}
+            fixedDecimalScale
+            onChange={setTaxValue}
           />
-          {option === 'percentage' ? 'Percentage' : 'Amount'}
-        </label>
-      ))}
-    </div>
-    <TextInput
-      label="Tax"
-      error="Invalid email"
-      defaultValue="hello!gmail.com"
-    />
-        </>
+        </div>
+        <div className={'section'}>
+          <Text size="sm" fw={500} mb={2}>
+            Tip
+          </Text>
+          <SegmentedControl
+            data={['Percentage', 'Amount']}
+            value={selectedTipType}
+            transitionDuration={200}
+            transitionTimingFunction="linear"
+            onChange={setSelectedTipType}
+          ></SegmentedControl>
+          <NumberInput
+            value={tipValue}
+            hideControls
+            decimalScale={2}
+            allowNegative={false}
+            fixedDecimalScale
+            onChange={setTipValue}
+          />
+        </div>
+      </div>
+    </>
   );
 }
 
-
-export default TaxAndTip
+export default TaxAndTip;

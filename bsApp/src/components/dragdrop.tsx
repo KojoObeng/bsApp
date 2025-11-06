@@ -1,17 +1,24 @@
-import React, { useState, useRef, useEffect, type Dispatch, type SetStateAction } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 import LoadingSpinner from './loadingspinner';
 import type { ParsedData } from '../types/results';
 
 interface DropZoneProps {
-    parsedData: ParsedData | null;
-  setParsedData: Dispatch<SetStateAction<ParsedData | null  >>;
+  parsedData: ParsedData | null;
+  setParsedData: Dispatch<SetStateAction<ParsedData | null>>;
 }
 
-function DropZone({ parsedData, setParsedData }: DropZoneProps  ) {
-const [isLoading, setIsLoading] = useState<boolean>(false);
-const [base64Image, setBase64Image] = useState<string | ArrayBuffer | null>(null);
-const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+function DropZone({ parsedData, setParsedData }: DropZoneProps) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [base64Image, setBase64Image] = useState<string | ArrayBuffer | null>(
+    null,
+  );
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const fileToBase64 = (file: File) => {
     const reader = new FileReader();
@@ -22,18 +29,18 @@ const fileInputRef = useRef<HTMLInputElement | null>(null);
   };
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('handle upload');
     const selectedFile = e.target?.files?.[0];
     if (!selectedFile) return;
     setIsLoading(true);
+    fileToBase64(selectedFile);
+  };
 
-    fileToBase64(selectedFile)
-  }
-
-const handleContainerClick = () => {
+  const handleContainerClick = () => {
+    console.log('container clicked');
     fileInputRef.current?.click();
   };
 
-  
   // Drag handlers
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -44,9 +51,9 @@ const handleContainerClick = () => {
     e.preventDefault();
     e.stopPropagation();
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-    const selectedFile = e.dataTransfer.files[0];
+      const selectedFile = e.dataTransfer.files[0];
       setIsLoading(true);
-      fileToBase64(selectedFile)
+      fileToBase64(selectedFile);
       e.dataTransfer.clearData();
     }
   };
@@ -54,65 +61,69 @@ const handleContainerClick = () => {
   // Paste handler
   const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
     if (e.clipboardData.files && e.clipboardData.files.length > 0) {
-        const selectedFile = e.clipboardData.files[0];
-        setIsLoading(true);
-      fileToBase64(selectedFile)
+      const selectedFile = e.clipboardData.files[0];
+      setIsLoading(true);
+      fileToBase64(selectedFile);
       e.preventDefault();
     }
   };
 
-useEffect(() => {
+  useEffect(() => {
+    console.log('base64Image changed', base64Image);  
     if (!base64Image) return;
 
     const sendToServer = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/parsereceipt`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const res = await fetch(
+          `${import.meta.env.VITE_SERVER_URL}/parsereceipt`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ image: base64Image }),
           },
-          body: JSON.stringify({ image: base64Image }),
-        });
+        );
 
         const data = await res.json();
+        for (const item of data.items) {
+          item.id = crypto.randomUUID();
+        }
         setParsedData(data);
       } catch (error) {
-
         console.error('Upload error:', error);
       }
-    setIsLoading(false);
-
+      setIsLoading(false);
     };
-
     sendToServer();
+    setBase64Image(null); // reset after sending
   }, [base64Image]);
-  
 
   return (
     <>
-     
-    <div
-      onClick={handleContainerClick}
-    onDragOver={handleDragOver}
-      onDrop={handleDrop}
-      onPaste={handlePaste}
-      aria-disabled={isLoading}
-      id='file-upload-container'
-      className={`${isLoading || parsedData ? "cursor-none w-50 h-15 text-xs" : "cursor-pointer w-[80vw] h-[40vh]"} transition-all duration-700 ease-in-out hover:text-gray-500 border-1 border-white border-dashed rounded-xl bg-transparent p-4 flex items-center justify-center align-center font-stylescript text-xl font-light `}
-      tabIndex={0} // needed to focus and receive paste events
-    >
-    <div>
-        {isLoading ? <LoadingSpinner/> : "click / drag / paste receipt"}
-    </div>
-    <input
-        type="file"
-        onChange={handleUpload}
-        className="hidden"
-        ref={fileInputRef}
-        disabled={isLoading}
-      />
-    </div>
-  </>)
+      <div
+        onClick={handleContainerClick}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onPaste={handlePaste}
+        aria-disabled={isLoading}
+        id="file-upload-container"
+        className={`${isLoading || parsedData ? 'cursor-none w-50 h-15 text-xs' : 'cursor-pointer w-[80vw] h-[40vh]'} text-white transition-all duration-700 ease-in-out hover:text-gray-500 border-1 border-white border-dashed rounded-xl bg-transparent p-4 flex items-center justify-center align-center font-stylescript text-xl font-light `}
+        tabIndex={0} // needed to focus and receive paste events
+      >
+        <div>
+          {isLoading ? <LoadingSpinner /> : 'click / drag / paste receipt'}
+        </div>
+        <input
+          type="file"
+          onChange={handleUpload}
+          className="hidden"
+          ref={fileInputRef}
+          disabled={isLoading}
+        />
+      </div>
+    </>
+  );
 }
 
-export default DropZone
+export default DropZone;

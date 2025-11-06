@@ -33,13 +33,12 @@ const sendImageToGPT = async (image) => {
                     {
                     type: 'text',
                     text:
-                        'You are being shown a receipt from a restaurant. Please correctly parse out all items, quantity, tax, and tip and prices in the following receipt. ' +
-                        'Return the extracted information in a json using this schema: ' +
-                        'items: ["{ "Quantity": (float), "Name": (string), "Price": (float) }"], tax: (float), tip: (float), ' +
-                        'where the price is the cost of 1 of each item, so price multiplied by quantity should equal the total amount charged for that item.' +
-                        'Make sure to include all items, tax, and tip. if there is no tax or tip, set those values to 0.00. ' +
-                        'Make sure all numbers are in decimal format with 2 decimal places. ' +
-                        'Do not include markdown formatting, notes, or extra symbols.'
+                        'You are being shown a receipt from a restaurant. ' +
+                        'Parse the receipt lines into a valid JSON using this schema: ' +
+                        'items: ["{ "Quantity": (float), "Name": (string), "Price": (float) }"], tax: (float), tip: (float)], ' +
+                        'Where Price is the cost of 1 of the line item, NOT for the total quantity' +
+                        'Return every line from the receipt, do not try to group things,' +
+                        'do not include any extra text or formatting or Markdown -- ONLY the JSON.'
                     },
                     {
                     type: 'image_url',
@@ -60,26 +59,31 @@ const sendImageToGPT = async (image) => {
 };
 
 app.post('/parsereceipt', async (req, res) => {
-//   const chatGPTfullresponse = await sendImageToGPT(req.body.image);
-//   const messageContentString = chatGPTfullresponse.choices[0].message.content;
-//   const messageContentJSON = JSON.parse(messageContentString);
-await new Promise(resolve => setTimeout(resolve, 500));
-  const messageContentJSON = {
-   items: [
-     { Quantity: 2, Name: 'Old F Makers', Price: 22.00 },
-     { Quantity: 1, Name: 'Purple Rain', Price: 24.00 },
-     { Quantity: 1, Name: 'Blushing Geisha', Price: 25.00 },
-     { Quantity: 1, Name: 'Gl Fiol Prosecco', Price: 18.00 },
-     { Quantity: 1, Name: 'Salmon Tacos', Price: 24.00 },
-     { Quantity: 1, Name: '6 Oysters', Price: 36.00 },
-     { Quantity: 1, Name: 'Chicken Sliders', Price: 27.00 },
-     { Quantity: 1, Name: 'Nitr Esp Martini', Price: 22.00 }
-   ],
-   tax: 28.6,
-   tip: 0.00
- };
+  const chatGPTfullresponse = await sendImageToGPT(req.body.image);
+  const messageContentString = chatGPTfullresponse.choices[0].message.content;
+  const messageContentStringCleaned = messageContentString.replace(/```json|```/g, '').trim();
+  console.log('Raw GPT response:', messageContentString);
+  const messageContentJSON = JSON.parse(messageContentString);
+
+// await new Promise(resolve => setTimeout(resolve, 500));
+//   const messageContentJSON = {
+//    items: [
+//      { Quantity: 2, Name: 'Old F Makers', Price: 22.00 },
+//      { Quantity: 1, Name: 'Purple Rain', Price: 24.00 },
+//      { Quantity: 1, Name: 'Blushing Geisha', Price: 25.00 },
+//      { Quantity: 1, Name: 'Gl Fiol Prosecco', Price: 18.00 },
+//      { Quantity: 1, Name: 'Salmon Tacos', Price: 24.00 },
+//      { Quantity: 1, Name: '6 Oysters', Price: 36.00 },
+//      { Quantity: 1, Name: 'Chicken Sliders', Price: 27.00 },
+//      { Quantity: 1, Name: 'Nitr Esp Martini', Price: 22.00 }
+//    ],
+//    tax: 28.6,
+//    tip: 0.00
+//  };
+
 console.log(messageContentJSON);
   res.json(messageContentJSON);
+
 });
 
 app.listen(3000, () => {
