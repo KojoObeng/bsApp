@@ -4,6 +4,7 @@ import { OpenAI } from 'openai';
 import path from "path";
 import express from 'express';
 import cors from 'cors';
+import { fileURLToPath } from "url";
 
 import dotenv from 'dotenv';
 dotenv.config()
@@ -13,6 +14,9 @@ app.use(express.json({ limit: '5mb' }));
 
 
 const acceptedOrigins = [process.env.VITE_FRONTEND_URL];
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(cors({origin: (origin, callback) => {
     // Allow requests from the specified origins or if no origin is provided (e.g., for
