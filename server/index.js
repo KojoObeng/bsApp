@@ -22,7 +22,7 @@ const __dirname = path.dirname(__filename);
 app.use(cors({origin: (origin, callback) => {
     // Allow requests from the specified origins or if no origin is provided (e.g., for
 
-    if (!origin || acceptedOrigins.includes(origin)) callback(null, true);
+    if (!origin || acceptedOrigins.includes(origin)) return callback(null, true);
 
     let normalized;
     try {
