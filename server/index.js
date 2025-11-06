@@ -14,6 +14,7 @@ app.use(express.json({ limit: '5mb' }));
 
 
 const acceptedOrigins = [process.env.VITE_FRONTEND_URL];
+consoole.log('frontendurl', process.env.VITE_FRONTEND_URL);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
