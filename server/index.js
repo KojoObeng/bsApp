@@ -34,11 +34,13 @@ app.use(cors({origin: (origin, callback) => {
     
     if (acceptedOrigins.includes(normalized)) {
       return callback(null, true);
-    } else {
-    console.warn("Rejected Origin:", normalized);
-    return callback(null, false);
     }
-}}));
+
+    console.warn("Rejected Origin:", normalized);
+    return callback(null, false);  // DO NOT throw
+  },
+  credentials: true
+}));
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
