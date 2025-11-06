@@ -13,10 +13,9 @@ type NameInfo = {
   name: string;
 };
 
-function Names({ nameHook, nameMatrixHook, handleNameRemove }: NameProps) {
+function Names({ nameHook, handleNameRemove }: NameProps) {
   const [currentName, setCurrentName] = useState('');
   const [enteredNames, setEnteredNames] = nameHook;
-  const [nameMatrix, setNameMatrix] = nameMatrixHook; 
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event?.currentTarget?.value.trimStart();
