@@ -1,10 +1,11 @@
 import { NumberInput, SegmentedControl, Text } from '@mantine/core';
-import { useState } from 'react';
 import './taxandtip.css';
 
 interface TaxAndTipProps {
-  // taxValueHook: number;
-  // tipValueHook: number;
+  taxValueHook: [number, React.Dispatch<React.SetStateAction<number>>],
+  tipValueHook: [number, React.Dispatch<React.SetStateAction<number>>],
+  taxTypeHook: [string, React.Dispatch<React.SetStateAction<string>>],
+  tipTypeHook: [string, React.Dispatch<React.SetStateAction<string>>],
 }
 
 function TaxAndTip({
@@ -39,7 +40,7 @@ function TaxAndTip({
             decimalScale={2}
             allowNegative={false}
             fixedDecimalScale
-            onChange={setTaxValue}
+            onChange={() => setTaxValue}
           />
         </div>
         <div className={'section'}>
@@ -59,7 +60,7 @@ function TaxAndTip({
             decimalScale={2}
             allowNegative={false}
             fixedDecimalScale
-            onChange={setTipValue}
+            onChange={() => setTipValue}
           />
         </div>
       </div>

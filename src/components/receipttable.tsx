@@ -1,8 +1,8 @@
 import type { NameInfo, NameMatrix, ParsedData } from '../types/results';
 import cx from 'clsx';
-import { Checkbox, CloseButton, ScrollArea, Table } from '@mantine/core';
+import { Checkbox, ScrollArea, Table } from '@mantine/core';
 import './receipttable.css';
-import { use, useCallback, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 
 interface ReceiptTableProps {
   parsedData: ParsedData;
@@ -15,7 +15,7 @@ export function ReceiptTable({
   names,
   nameMatrixHook,
 }: ReceiptTableProps) {
-  const [nameMatrix, setNameMatrix] = nameMatrixHook;
+  const [, setNameMatrix] = nameMatrixHook;
 
   const itemHeaders = ['Name', 'Quantity', 'Price ($)', 'Total ($)'];
   const allNames = useMemo(
@@ -31,7 +31,7 @@ export function ReceiptTable({
       return updated;
     });
     });
-  }, [names]);
+  }, [names, everyoneSetForItem, allNames, setNameMatrix]);
 
   const headers = [
     ...itemHeaders,
@@ -43,7 +43,6 @@ export function ReceiptTable({
 
   const onCheckboxChange = (checkboxID: string, isChecked: boolean) => {
     const [itemID, nameID] = checkboxID.split('|');
-    console.log(itemID, nameID, isChecked);
 
     setNameMatrix((prev) => {
       const updated = { ...prev };

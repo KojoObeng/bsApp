@@ -22,7 +22,6 @@ function Names({ nameHook, handleNameRemove }: NameProps) {
     if (!inputValue) return;
     if (inputValue.endsWith(' ')) {
       const newNameID = crypto.randomUUID(); 
-      console.log('Adding name:', newNameID);
       setEnteredNames((prev) => [
         ...prev,
         { id: newNameID, name: inputValue.split(' ')[0] },

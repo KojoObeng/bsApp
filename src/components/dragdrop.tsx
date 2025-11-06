@@ -29,7 +29,6 @@ function DropZone({ parsedData, setParsedData }: DropZoneProps) {
   };
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handle upload');
     const selectedFile = e.target?.files?.[0];
     if (!selectedFile) return;
     setIsLoading(true);
@@ -37,7 +36,6 @@ function DropZone({ parsedData, setParsedData }: DropZoneProps) {
   };
 
   const handleContainerClick = () => {
-    console.log('container clicked');
     fileInputRef.current?.click();
   };
 
@@ -69,7 +67,6 @@ function DropZone({ parsedData, setParsedData }: DropZoneProps) {
   };
 
   useEffect(() => {
-    console.log('base64Image changed', base64Image);  
     if (!base64Image) return;
 
     const sendToServer = async () => {
@@ -97,7 +94,7 @@ function DropZone({ parsedData, setParsedData }: DropZoneProps) {
     };
     sendToServer();
     setBase64Image(null); // reset after sending
-  }, [base64Image]);
+  }, [base64Image, setParsedData]);
 
   return (
     <>

@@ -62,8 +62,7 @@ app.post('/parsereceipt', async (req, res) => {
   const chatGPTfullresponse = await sendImageToGPT(req.body.image);
   const messageContentString = chatGPTfullresponse.choices[0].message.content;
   const messageContentStringCleaned = messageContentString.replace(/```json|```/g, '').trim();
-  console.log('Raw GPT response:', messageContentString);
-  const messageContentJSON = JSON.parse(messageContentString);
+  const messageContentJSON = JSON.parse(messageContentStringCleaned);
 
 // await new Promise(resolve => setTimeout(resolve, 500));
 //   const messageContentJSON = {
@@ -81,11 +80,14 @@ app.post('/parsereceipt', async (req, res) => {
 //    tip: 0.00
 //  };
 
-console.log(messageContentJSON);
   res.json(messageContentJSON);
 
 });
 
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
+
+app.listen(3000, () => {
+});
+

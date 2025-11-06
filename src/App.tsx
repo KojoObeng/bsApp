@@ -18,7 +18,7 @@ function App() {
   const nameMatrixHook = useState<NameMatrix>({});
 
   const [names, setNames] = nameHook;
-  const [nameMatrix, setNameMatrix] = nameMatrixHook;
+  const [, setNameMatrix] = nameMatrixHook;
 
   const theme = createTheme({
     /** Your theme override here */
@@ -74,6 +74,7 @@ function App() {
               tipTypeHook={tipTypeHook}
             />
             <TotalSummary
+              names={names}
               parsedData={parsedData}
               nameHook={nameHook}
               nameMatrixHook={nameMatrixHook}

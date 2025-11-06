@@ -7,9 +7,13 @@ import { IconDownload } from '@tabler/icons-react';
 
 interface TotalSummaryProps {
   parsedData: ParsedData;
-  names: string;
+  names: NameInfo[];
   nameMatrixHook: [NameMatrix, Dispatch<SetStateAction<NameMatrix>>];
   nameHook: [NameInfo[], Dispatch<SetStateAction<NameInfo[]>>];
+  taxValueHook: [number, React.Dispatch<React.SetStateAction<number>>],
+  tipValueHook: [number, React.Dispatch<React.SetStateAction<number>>],
+  taxTypeHook: [string, React.Dispatch<React.SetStateAction<string>>],
+  tipTypeHook: [string, React.Dispatch<React.SetStateAction<string>>],
 }
 
 export function TotalSummary({
@@ -21,8 +25,8 @@ export function TotalSummary({
   taxTypeHook,
   tipTypeHook,
 }: TotalSummaryProps) {
-  const [names, setNames] = nameHook;
-  const [nameMatrix, setNameMatrix] = nameMatrixHook;
+  const [names,] = nameHook;
+  const [nameMatrix,] = nameMatrixHook;
   const allNames = useMemo(
     () =>
       Object.values(nameMatrix).reduce((acc, nameSet) => {
@@ -30,13 +34,6 @@ export function TotalSummary({
       }, new Set()),
     [nameMatrix],
   );
-  console.log(parsedData.items);
-  console.log('nameMatrix', nameMatrix);
-
-  // const [selectedTaxType, setSelectedTaxType] = taxTypeHook;
-  // const [selectedTipType, setSelectedTipType] = tipTypeHook;
-  // const [taxValue, setTaxValue] = taxValueHook;
-  // const [tipValue, setTipValue] = tipValueHook;
 
   const noTaxNoTip = parsedData.items.reduce((acc, item) => {
     return acc + item.Price * item.Quantity;
@@ -50,7 +47,7 @@ export function TotalSummary({
     tipTypeHook[0] === 'Amount'
       ? tipValueHook[0]
       : noTaxNoTip * (tipValueHook[0] / 100);
-  const total = noTaxNoTip + parseFloat(taxAmount) + parseFloat(tipAmount);
+  const total = noTaxNoTip + taxAmount + tipAmount; 
 
   const personCost = useMemo(() => {
     return names.reduce(
@@ -80,8 +77,8 @@ export function TotalSummary({
     let total = 0;
     const eachPersonDiv = Object.entries(personCost).map(([nameID, amount]) => {
       const percentageOfTotal = amount / noTaxNoTip;
-      const taxPortion = parseFloat(taxAmount) * percentageOfTotal;
-      const tipPortion = parseFloat(tipAmount) * percentageOfTotal;
+      const taxPortion = taxAmount * percentageOfTotal;
+      const tipPortion = tipAmount * percentageOfTotal;
       const nameInfo = names.find((name) => name.id === nameID);
       const totalForPerson = amount + taxPortion + tipPortion;
       total += totalForPerson;
@@ -97,7 +94,7 @@ export function TotalSummary({
         <Text classNames={{root: 'total-text'}}fw={700}>Total - {total.toFixed(2)}</Text>
       </>
     );
-  }, [names, taxValueHook, tipValueHook, taxTypeHook, tipTypeHook]);
+  }, [names, personCost, noTaxNoTip, taxAmount, tipAmount]);
 
   const handleDownloadClick = () => {
     const subTotalText = `Subtotal: $${noTaxNoTip.toFixed(2)}\n`;
@@ -108,10 +105,7 @@ export function TotalSummary({
     const startingText =
       subTotalText + taxText + tipText + totalText + perPersonText;
     let lineItemStrings = '';
-    console.log('allNames', allNames);
     allNames.forEach((nameID) => {
-      console.log(nameID);
-      console.log('names', names);
       const nameInfo = names.find((name) => name.id === nameID);
       let totalShareWithoutTaxAndTip = 0;
       lineItemStrings += `${nameInfo?.name}:\n`;
@@ -132,9 +126,9 @@ export function TotalSummary({
         }
       });
       const percentageOfTotal = totalShareWithoutTaxAndTip / noTaxNoTip;
-      const taxPortion = (parseFloat(taxAmount) * percentageOfTotal).toFixed(2);
+      const taxPortion = (taxAmount * percentageOfTotal).toFixed(2);
       lineItemStrings += `Taxes: $${taxPortion}\n`;
-      const tipPortion = (parseFloat(tipAmount) * percentageOfTotal).toFixed(2);
+      const tipPortion = (tipAmount * percentageOfTotal).toFixed(2);
       lineItemStrings += `Tip: $${tipPortion}\n`;
       const totalForPerson = (
         totalShareWithoutTaxAndTip +
