@@ -20,6 +20,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(cors({origin: (origin, callback) => {
     // Allow requests from the specified origins or if no origin is provided (e.g., for
+    console.log('CORS check for origin:', origin);
     if (!origin || acceptedOrigins.includes(origin)) callback(null, true);
     else callback(new Error('CORS policy violation: Origin not allowed'));
 
