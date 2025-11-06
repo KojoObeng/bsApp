@@ -1,6 +1,7 @@
 // server/index.js
 import { OpenAI } from 'openai';
 
+import path from "path";
 import express from 'express';
 import cors from 'cors';
 
@@ -10,15 +11,15 @@ dotenv.config()
 const app = express();
 app.use(express.json({ limit: '5mb' }));
 
+
 const acceptedOrigins = [process.env.VITE_FRONTEND_URL];
 
 app.use(cors({origin: (origin, callback) => {
     // Allow requests from the specified origins or if no origin is provided (e.g., for
-    if (acceptedOrigins.includes(origin)) callback(null, true);
+    if (!origin || acceptedOrigins.includes(origin)) callback(null, true);
     else callback(new Error('CORS policy violation: Origin not allowed'));
 
 }}));
-app.use(express.json());
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -64,6 +65,19 @@ app.post('/parsereceipt', async (req, res) => {
   const messageContentStringCleaned = messageContentString.replace(/```json|```/g, '').trim();
   const messageContentJSON = JSON.parse(messageContentStringCleaned);
 
+  res.json(messageContentJSON);
+
+});
+
+app.use(express.static(path.join(__dirname, "../dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
+
+app.listen(3000, () => {
+});
+
+
 // await new Promise(resolve => setTimeout(resolve, 500));
 //   const messageContentJSON = {
 //    items: [
@@ -79,15 +93,4 @@ app.post('/parsereceipt', async (req, res) => {
 //    tax: 28.6,
 //    tip: 0.00
 //  };
-
-  res.json(messageContentJSON);
-
-});
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/index.html"));
-});
-
-app.listen(3000, () => {
-});
 
