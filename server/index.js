@@ -21,11 +21,23 @@ const __dirname = path.dirname(__filename);
 
 app.use(cors({origin: (origin, callback) => {
     // Allow requests from the specified origins or if no origin is provided (e.g., for
-    console.log('Accepted origins:', acceptedOrigins);
-    console.log('CORS check for origin:', origin);
-    if (!origin || acceptedOrigins.includes(origin)) callback(null, true);
-    else callback(new Error('CORS policy violation: Origin not allowed'));
 
+    if (!origin || acceptedOrigins.includes(origin)) callback(null, true);
+
+    let normalized;
+    try {
+      normalized = new URL(origin).origin;
+    } catch {
+      console.warn("Rejected malformed Origin header:", origin);
+      return callback(null, false); 
+    }
+    
+    if (acceptedOrigins.includes(normalized)) {
+      return callback(null, true);
+    } else {
+    console.warn("Rejected Origin:", normalized);
+    return callback(null, false);
+    }
 }}));
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
