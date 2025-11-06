@@ -8,7 +8,7 @@
     "dev": "concurrently \"npm run client\" \"nodemon server/index.js\"",
     "prod": "NODE_ENV=production concurrently \"npm run build\" \"node server/index.js\"",
     "build-dev": "SKIP_PREFLIGHT_CHECK=true npm install && vite build",
-    "render": "SKIP_PREFLIGHT_CHECK=true npm install && vite build &&  cd server && npm install && node server/index.js",
+    "render": "SKIP_PREFLIGHT_CHECK=true npm install && vite build &&  cd server && npm install && node index.js",
     "build": "npm install && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
