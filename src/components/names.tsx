@@ -43,7 +43,7 @@ function Names({ nameHook, handleNameRemove }: NameProps) {
   ));
 
   return (
-    <PillsInput classNames={{ wrapper: 'wrapper', input: 'input' }}>
+    <PillsInput classNames={{ wrapper: 'wrapper', input: 'input' }} w={'100%'}>
       <Pill.Group>
         {pills}
         <PillsInput.Field

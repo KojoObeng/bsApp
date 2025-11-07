@@ -19,28 +19,11 @@ console.log('frontendurl', process.env.VITE_FRONTEND_URL);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(cors({origin: (origin, callback) => {
-    // Allow requests from the specified origins or if no origin is provided (e.g., for
-
-    if (!origin || acceptedOrigins.includes(origin)) return callback(null, true);
-
-    let normalized;
-    try {
-      normalized = new URL(origin).origin;
-    } catch {
-      console.warn("Rejected malformed Origin header:", origin);
-      return callback(null, false); 
-    }
-    
-    if (acceptedOrigins.includes(normalized)) {
-      return callback(null, true);
-    }
-
-    console.warn("Rejected Origin:", normalized);
-    return callback(null, false);  // DO NOT throw
-  },
+app.use(cors({
+  origin: acceptedOrigins,
   credentials: true
 }));
+
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -86,19 +69,6 @@ app.post('/parsereceipt', async (req, res) => {
   const messageContentStringCleaned = messageContentString.replace(/```json|```/g, '').trim();
   const messageContentJSON = JSON.parse(messageContentStringCleaned);
 
-  res.json(messageContentJSON);
-
-});
-
-app.use(express.static(path.join(__dirname, "../dist")));
-app.get('/{*any}', (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/index.html"));
-});
-
-app.listen(3000, () => {
-});
-
-
 // await new Promise(resolve => setTimeout(resolve, 500));
 //   const messageContentJSON = {
 //    items: [
@@ -113,5 +83,19 @@ app.listen(3000, () => {
 //    ],
 //    tax: 28.6,
 //    tip: 0.00
-//  };
+//};
+
+  res.json(messageContentJSON);
+
+});
+
+app.use(express.static(path.join(__dirname, "../dist")));
+app.get('/{*any}', (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
+
+app.listen(3000, () => {
+});
+
+
 

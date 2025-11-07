@@ -98,9 +98,9 @@ export function TotalSummary({
 
   const handleDownloadClick = () => {
     const subTotalText = `Subtotal: $${noTaxNoTip.toFixed(2)}\n`;
-    const taxText = `Tax: $${taxAmount}\n`;
-    const tipText = `Tip: $${tipAmount}\n`;
-    const totalText = `Total: $${total}\n\n`;
+    const taxText = `Tax: $${taxAmount.toFixed(2)}\n`;
+    const tipText = `Tip: $${tipAmount.toFixed(2)}\n`;
+    const totalText = `Total: $${total.toFixed(2)}\n\n`;
     const perPersonText = 'Amount each person owes:\n\n';
     const startingText =
       subTotalText + taxText + tipText + totalText + perPersonText;
@@ -152,12 +152,12 @@ export function TotalSummary({
   };
 
   return (
-    <div className="flex gap-10 justify-around w-[70rem]">
+    <div className="flex gap-10 mb-10 justify-evenly w-[100%] flex-col max-w-[70rem] items-center">
       <Paper
         shadow="xl"
         radius="xl"
         withBorder
-        p="xl"
+        p="lg"
         classNames={{ root: 'paper' }}
       >
         <Text>Subtotal: ${noTaxNoTip.toFixed(2)}</Text>
@@ -169,7 +169,7 @@ export function TotalSummary({
         shadow="xl"
         radius="xl"
         withBorder
-        p="xl"
+        p="lg"
         classNames={{ root: 'paper' }}
       >
         <Text classNames={{root: 'amountEachPersonOwesText'}} fw={700}>Amount each person owes: </Text>
@@ -179,7 +179,8 @@ export function TotalSummary({
       <Button
         onClick={handleDownloadClick}
         rightSection={<IconDownload size={14} />}
-        color='black'>
+        color='dark'
+        >
         Download Detailed Summary
       </Button>
     </div>

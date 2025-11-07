@@ -1,6 +1,6 @@
 import type { NameInfo, NameMatrix, ParsedData } from '../types/results';
 import cx from 'clsx';
-import { Checkbox, ScrollArea, Table } from '@mantine/core';
+import { Checkbox, Table } from '@mantine/core';
 import './receipttable.css';
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 
@@ -103,15 +103,15 @@ export function ReceiptTable({
   });
 
   return (
-    <ScrollArea className="scrollarea">
+      <Table.ScrollContainer w="100%" minWidth='100%'>
       <Table
         stickyHeader={true}
         striped
-        miw={700}
         stripedColor="gray"
         highlightOnHover={true}
         withRowBorders={false}
         className={cx('table')}
+        w="100%"
         highlightOnHoverColor="dark"
       >
         <Table.Thead className="header">
@@ -119,7 +119,7 @@ export function ReceiptTable({
         </Table.Thead>
         <Table.Tbody className="rows">{rows}</Table.Tbody>
       </Table>
-    </ScrollArea>
+      </Table.ScrollContainer>
   );
 }
 

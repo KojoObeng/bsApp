@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 } */
+
+
+/* Override mantine bs */
+body {
+  background-color: transparent !important; 
+}

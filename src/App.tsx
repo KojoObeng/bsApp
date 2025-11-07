@@ -7,6 +7,8 @@ import type { NameInfo, NameMatrix, ParsedData } from './types/results';
 import Names from './components/names';
 import TaxAndTip from './components/taxandtip';
 import TotalSummary from './components/totalsummary';
+import './App.css'
+import clsx from 'clsx';
 
 function App() {
   const [parsedData, setParsedData] = useState<ParsedData | null>(null);
@@ -21,7 +23,6 @@ function App() {
   const [, setNameMatrix] = nameMatrixHook;
 
   const theme = createTheme({
-    /** Your theme override here */
   });
 
   useEffect(() => {
@@ -29,7 +30,7 @@ function App() {
     const [, setTipValue] = tipValueHook;
     setTaxValue(parsedData?.tax ?? 0);
     setTipValue(parsedData?.tip ?? 0);
-  }, [parsedData]);
+  }, [parsedData, taxValueHook, tipValueHook]);
 
   const handleNameRemove = (nameID: string) => () => {
     setNames((prev) => prev.filter((nameInfo) => nameInfo.id !== nameID));
@@ -50,13 +51,13 @@ function App() {
 
   return (
     <MantineProvider theme={theme}>
-      <div className={``}>
+      <div className={'bg-transparent flex justify-center w-[100%] items-center'}>
         <div className={dropzonestyle}>
           <DropZone setParsedData={setParsedData} parsedData={parsedData} />
         </div>
 
         {parsedData ? (
-          <div className="absolute top-10 left-1/2 -translate-x-1/2 -translate-y-1/ w-[80vw] flex flex-col items-center justify-center gap-10">
+          <div className={clsx('background-color', 'flex flex-col w-[90%] mt-30 bg-transparent gap-4 items-center')}>
             <Names
               nameHook={nameHook}
               nameMatrixHook={nameMatrixHook}

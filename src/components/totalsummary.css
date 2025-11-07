@@ -1,5 +1,5 @@
 .paper {
-    padding: 2rem;
+    padding: 0.5rem;
     color: white;
     background-color: transparent;
 }
@@ -11,4 +11,8 @@
 .amountEachPersonOwesText {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
+}
+
+.button {
+    background-color: var(--table-highlight-on-hover-color);
 }
