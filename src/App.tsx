@@ -51,13 +51,13 @@ function App() {
 
   return (
     <MantineProvider theme={theme}>
-      <div className={'bg-transparent flex justify-center w-[100%] items-center'}>
+      <div className={'bg-transparent flex justify-center w-full overflow-x-hidden items-center'}>
         <div className={dropzonestyle}>
           <DropZone setParsedData={setParsedData} parsedData={parsedData} />
         </div>
 
         {parsedData ? (
-          <div className={clsx('background-color', 'flex flex-col w-[90%] mt-30 bg-transparent gap-4 items-center')}>
+          <div className={clsx('background-color', 'flex flex-col w-full px-4 sm:px-8 mt-28 bg-transparent gap-4 items-center')}>
             <Names
               nameHook={nameHook}
               nameMatrixHook={nameMatrixHook}
@@ -67,6 +67,7 @@ function App() {
               parsedData={parsedData}
               names={names}
               nameMatrixHook={nameMatrixHook}
+              setParsedData={setParsedData}
             />
             <TaxAndTip
               taxValueHook={taxValueHook}

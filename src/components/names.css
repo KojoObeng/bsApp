@@ -1,15 +1,27 @@
 .wrapper {
-    background-color: transparent;
+    background: rgba(220, 215, 235, 0.04);
+    border: 1px solid rgba(220, 215, 235, 0.1);
+    border-radius: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.2s ease;
     display: flex;
     justify-content: center;
     width: 100%;
 }
 
+.wrapper:focus-within {
+    border-color: rgba(220, 215, 235, 0.25);
+}
+
 .input {
     width: 100%;
     background-color: transparent;
-    color: white;
-    font-size: 0.8rem
+    color: rgba(220, 215, 235, 0.8);
+    font-size: 0.8rem;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .input div button {

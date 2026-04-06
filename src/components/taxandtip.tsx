@@ -21,7 +21,7 @@ function TaxAndTip({
 
   return (
     <>
-      <div className={'flex gap-2 w-[90%] justify-around'}>
+      <div className={'flex gap-4 w-full justify-center'}>
         <div className={'section'}>
           <Text size="sm" fw={500} mb={2}>
             Tax

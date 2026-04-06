@@ -1,0 +1,27 @@
+.initial-dropzone {
+  border-color: rgba(220, 215, 235, 0.2);
+  color: rgba(220, 215, 235, 0.55);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.initial-dropzone:hover {
+  border-color: rgba(220, 215, 235, 0.4);
+  color: rgba(220, 215, 235, 0.8);
+}
+
+.loaded-dropzone {
+  background: rgba(220, 215, 235, 0.04);
+  border: 1px solid rgba(220, 215, 235, 0.12);
+  border-radius: 0.65rem;
+  color: rgba(220, 215, 235, 0.4);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  backdrop-filter: blur(8px);
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.loaded-dropzone:hover {
+  color: rgba(220, 215, 235, 0.75);
+  border-color: rgba(220, 215, 235, 0.28);
+  background: rgba(220, 215, 235, 0.07);
+}

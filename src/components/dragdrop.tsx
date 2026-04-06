@@ -6,6 +6,7 @@ import React, {
   type SetStateAction,
 } from 'react';
 import LoadingSpinner from './loadingspinner';
+import './dragdrop.css';
 import type { ParsedData } from '../types/results';
 
 interface DropZoneProps {
@@ -105,7 +106,7 @@ function DropZone({ parsedData, setParsedData }: DropZoneProps) {
         onPaste={handlePaste}
         aria-disabled={isLoading}
         id="file-upload-container"
-        className={`${isLoading || parsedData ? 'cursor-none w-50 h-15 text-xs' : 'cursor-pointer w-[80vw] h-[40vh]'} text-white transition-all duration-700 ease-in-out hover:text-gray-500 border-1 border-white border-dashed rounded-xl bg-transparent p-4 flex items-center justify-center align-center font-stylescript text-xl font-light `}
+        className={`${isLoading || parsedData ? 'cursor-pointer w-auto h-auto text-xs px-3 py-2 loaded-dropzone' : 'cursor-pointer w-[80vw] h-[40vh] border border-dashed rounded-xl initial-dropzone'} transition-all duration-700 ease-in-out bg-transparent flex items-center justify-center font-stylescript text-xl font-light `}
         tabIndex={0} // needed to focus and receive paste events
       >
         <div>

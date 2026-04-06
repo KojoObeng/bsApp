@@ -5,13 +5,25 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: rgba(220, 215, 235, 0.82);
+  background-color: #0f0f13;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  background: radial-gradient(ellipse at 30% 0%, #1e1b3a 0%, #0f0f13 55%);
+  min-height: 100%;
+}
+
+/* Checkbox color override */
+.mantine-Checkbox-input:checked,
+.mantine-Checkbox-input[data-indeterminate] {
+  background-color: #7c6fa0 !important;
+  border-color: #7c6fa0 !important;
 }
 
 

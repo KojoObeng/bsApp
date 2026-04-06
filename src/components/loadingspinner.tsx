@@ -1,10 +1,7 @@
-/* HTML: <div class="loader"></div> */
-import './loadingspinner.css'
+import { Loader } from '@mantine/core';
+
 function LoadingSpinner() {
-  
-  return (
-    <div className="loader h-4 w-4"></div>
-  )
+  return <Loader size={16} color="rgba(220, 215, 235, 0.5)" />;
 }
 
 export default LoadingSpinner

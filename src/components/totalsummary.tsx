@@ -1,6 +1,6 @@
 import type { NameInfo, NameMatrix, ParsedData } from '../types/results';
 // import cx from 'clsx';
-import { Button, Paper, Text } from '@mantine/core';
+import { Paper } from '@mantine/core';
 import './totalsummary.css';
 import { useMemo, type Dispatch, type SetStateAction } from 'react';
 import { IconDownload } from '@tabler/icons-react';
@@ -73,28 +73,19 @@ export function TotalSummary({
     );
   }, [names, nameMatrix, parsedData]);
 
-  const amountEachPersonOwes = useMemo(() => {
-    let total = 0;
-    const eachPersonDiv = Object.entries(personCost).map(([nameID, amount]) => {
-      const percentageOfTotal = amount / noTaxNoTip;
-      const taxPortion = taxAmount * percentageOfTotal;
-      const tipPortion = tipAmount * percentageOfTotal;
+  const personOwes = useMemo(() => {
+    return Object.entries(personCost).map(([nameID, amount]) => {
+      const percentageOfTotal = noTaxNoTip > 0 ? amount / noTaxNoTip : 0;
+      const total = amount + taxAmount * percentageOfTotal + tipAmount * percentageOfTotal;
       const nameInfo = names.find((name) => name.id === nameID);
-      const totalForPerson = amount + taxPortion + tipPortion;
-      total += totalForPerson;
-      return (
-        <div>
-          {nameInfo?.name} - ${(amount + taxPortion + tipPortion).toFixed(2)}
-        </div>
-      );
+      return { name: nameInfo?.name ?? '', total };
     });
-    return (
-      <>
-        <div>{eachPersonDiv}</div>
-        <Text classNames={{root: 'total-text'}}fw={700}>Total - {total.toFixed(2)}</Text>
-      </>
-    );
   }, [names, personCost, noTaxNoTip, taxAmount, tipAmount]);
+
+  const personOwesTotal = useMemo(
+    () => personOwes.reduce((sum, p) => sum + p.total, 0),
+    [personOwes],
+  );
 
   const handleDownloadClick = () => {
     const subTotalText = `Subtotal: $${noTaxNoTip.toFixed(2)}\n`;
@@ -152,37 +143,27 @@ export function TotalSummary({
   };
 
   return (
-    <div className="flex gap-10 mb-10 justify-evenly w-[100%] flex-col max-w-[70rem] items-center">
-      <Paper
-        shadow="xl"
-        radius="xl"
-        withBorder
-        p="lg"
-        classNames={{ root: 'paper' }}
-      >
-        <Text>Subtotal: ${noTaxNoTip.toFixed(2)}</Text>
-        <Text>Tax: ${taxAmount.toFixed(2)}</Text>
-        <Text>Tip: ${tipAmount.toFixed(2)}</Text>
-        <Text classNames={{root: 'total-text'}} fw={700}>Total: ${total.toFixed(2)}</Text>
-      </Paper>
-      <Paper
-        shadow="xl"
-        radius="xl"
-        withBorder
-        p="lg"
-        classNames={{ root: 'paper' }}
-      >
-        <Text classNames={{root: 'amountEachPersonOwesText'}} fw={700}>Amount each person owes: </Text>
-        <Text>{amountEachPersonOwes}</Text>
-        
-      </Paper>
-      <Button
-        onClick={handleDownloadClick}
-        rightSection={<IconDownload size={14} />}
-        color='dark'
-        >
+    <div className="flex gap-6 mb-10 w-full flex-col max-w-[70rem] items-center">
+      <div className="flex gap-4 justify-center w-full">
+        <Paper shadow="xl" radius="xl" withBorder classNames={{ root: 'paper' }}>
+          <p className="summary-label">Summary</p>
+          <div className="summary-row"><span>Subtotal</span><span>${noTaxNoTip.toFixed(2)}</span></div>
+          <div className="summary-row"><span>Tax</span><span>${taxAmount.toFixed(2)}</span></div>
+          <div className="summary-row"><span>Tip</span><span>${tipAmount.toFixed(2)}</span></div>
+          <div className="summary-row total-row"><span>Total</span><span>${total.toFixed(2)}</span></div>
+        </Paper>
+        <Paper shadow="xl" radius="xl" withBorder classNames={{ root: 'paper' }}>
+          <p className="summary-label">Each person owes</p>
+          {personOwes.map((p) => (
+            <div key={p.name} className="summary-row"><span>{p.name}</span><span>${p.total.toFixed(2)}</span></div>
+          ))}
+          <div className="summary-row total-row"><span>Total</span><span>${personOwesTotal.toFixed(2)}</span></div>
+        </Paper>
+      </div>
+      <button onClick={handleDownloadClick} className="download-btn">
         Download Detailed Summary
-      </Button>
+        <IconDownload size={14} />
+      </button>
     </div>
   );
 }

@@ -44,5 +44,6 @@
 
 /* Override mantine bs */
 body {
-  background-color: transparent !important; 
+  background-color: transparent !important;
+  min-height: 100vh;
 }

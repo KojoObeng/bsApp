@@ -1,6 +1,48 @@
 .section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: rgba(220, 215, 235, 0.75);
+    background: rgba(220, 215, 235, 0.04);
+    border: 1px solid rgba(220, 215, 235, 0.1);
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+    backdrop-filter: blur(8px);
+    flex: 1;
+}
+
+/* SegmentedControl */
+.section .mantine-SegmentedControl-root {
+    background: rgba(220, 215, 235, 0.06);
+    border: 1px solid rgba(220, 215, 235, 0.1);
+    border-radius: 0.5rem;
+    padding: 2px;
+}
+
+.section .mantine-SegmentedControl-label {
+    color: rgba(220, 215, 235, 0.45);
+    font-size: 0.78rem;
+}
+
+.section .mantine-SegmentedControl-label[data-active] {
+    color: rgba(220, 215, 235, 0.88);
+}
+
+.section .mantine-SegmentedControl-indicator {
+    background: rgba(124, 111, 160, 0.5) !important;
+    box-shadow: none !important;
+}
+
+/* NumberInput */
+.section .mantine-NumberInput-input {
+    background: rgba(220, 215, 235, 0.05);
+    border: 1px solid rgba(220, 215, 235, 0.1);
+    border-radius: 0.5rem;
+    color: rgba(220, 215, 235, 0.8);
+    font-size: 0.875rem;
+}
+
+.section .mantine-NumberInput-input:focus {
+    border-color: rgba(124, 111, 160, 0.5);
+    outline: none;
 }
