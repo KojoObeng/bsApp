@@ -1,8 +1,33 @@
+.names-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    width: 100%;
+}
+
+.names-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(220, 215, 235, 0.5);
+    font-weight: 600;
+    margin: 0;
+}
+
+.names-hint {
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    font-weight: 400;
+    color: rgba(220, 215, 235, 0.3);
+    font-style: italic;
+}
+
 .wrapper {
     background: rgba(220, 215, 235, 0.04);
     border: 1px solid rgba(220, 215, 235, 0.1);
     border-radius: 0.75rem;
-    padding: 0.25rem 0.75rem;
+    padding: 0.4rem 0.75rem;
     backdrop-filter: blur(8px);
     transition: border-color 0.2s ease;
     display: flex;
@@ -10,8 +35,19 @@
     width: 100%;
 }
 
+.wrapper--empty {
+    border-color: rgba(180, 165, 220, 0.35);
+    animation: pulse-border 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+    0%, 100% { border-color: rgba(180, 165, 220, 0.35); }
+    50%       { border-color: rgba(180, 165, 220, 0.65); }
+}
+
 .wrapper:focus-within {
-    border-color: rgba(220, 215, 235, 0.25);
+    border-color: rgba(220, 215, 235, 0.35);
+    animation: none;
 }
 
 .input {

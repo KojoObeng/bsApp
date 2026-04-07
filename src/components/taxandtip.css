@@ -9,6 +9,7 @@
     padding: 1rem 1.25rem;
     backdrop-filter: blur(8px);
     flex: 1;
+    max-width: 16rem;
 }
 
 /* SegmentedControl */

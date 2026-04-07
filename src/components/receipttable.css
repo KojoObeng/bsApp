@@ -212,6 +212,47 @@ tbody tr td div {
   color: rgba(124, 111, 160, 0.9);
 }
 
+.mobile-select-actions {
+  display: flex;
+  gap: 6px;
+  margin: 6px 0.75rem 4px;
+}
+
+.mobile-select-next {
+  flex: 1;
+  padding: 5px 0;
+  background: rgba(220, 215, 235, 0.06);
+  border: 1px solid rgba(220, 215, 235, 0.15);
+  border-radius: 0.4rem;
+  color: rgba(220, 215, 235, 0.65);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.mobile-select-next:hover {
+  background: rgba(220, 215, 235, 0.1);
+}
+
+.mobile-select-done {
+  display: block;
+  flex: 1;
+  padding: 5px 0;
+  background: rgba(124, 111, 160, 0.2);
+  border: 1px solid rgba(124, 111, 160, 0.35);
+  border-radius: 0.4rem;
+  color: rgba(220, 215, 235, 0.8);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.mobile-select-done:hover {
+  background: rgba(124, 111, 160, 0.35);
+}
+
 /* Desktop min-widths */
 @media (min-width: 641px) {
   thead tr th:nth-child(1),

@@ -19,7 +19,7 @@ function Names({ nameHook, handleNameRemove }: NameProps) {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event?.currentTarget?.value.trimStart();
-    if (!inputValue) return;
+    if (inputValue === undefined) return;
     if (inputValue.endsWith(' ')) {
       const newNameID = crypto.randomUUID(); 
       setEnteredNames((prev) => [
@@ -43,16 +43,21 @@ function Names({ nameHook, handleNameRemove }: NameProps) {
   ));
 
   return (
-    <PillsInput classNames={{ wrapper: 'wrapper', input: 'input' }} w={'100%'}>
-      <Pill.Group>
-        {pills}
-        <PillsInput.Field
-          placeholder="enter names separated by spaces..."
-          value={currentName}
-          onChange={handleChange}
-        />
-      </Pill.Group>
-    </PillsInput>
+    <div className="names-container">
+      <p className="names-label">
+        Who's splitting? <span className="names-hint">type a name then press space</span>
+      </p>
+      <PillsInput classNames={{ wrapper: enteredNames.length === 0 ? 'wrapper wrapper--empty' : 'wrapper', input: 'input' }} w={'100%'}>
+        <Pill.Group>
+          {pills}
+          <PillsInput.Field
+            placeholder={enteredNames.length === 0 ? "e.g. Kojo Jason Celia..." : undefined}
+            value={currentName}
+            onChange={handleChange}
+          />
+        </Pill.Group>
+      </PillsInput>
+    </div>
   );
 }
 

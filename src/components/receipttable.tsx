@@ -10,15 +10,18 @@ interface MobileSelectProps {
   names: NameInfo[];
   selected: string[];
   onChange: (itemID: string, values: string[]) => void;
+  opened: boolean;
+  onOpenChange: (open: boolean) => void;
+  hasNext: boolean;
+  onNext: () => void;
 }
 
-function MobileSelect({ itemID, names, selected, onChange }: MobileSelectProps) {
-  const [opened, setOpened] = useState(false);
+function MobileSelect({ itemID, names, selected, onChange, opened, onOpenChange, hasNext, onNext }: MobileSelectProps) {
 
   const getLabel = (id: string) =>
     id === 'everyone' ? 'Everyone' : (names.find((n) => n.id === id)?.name ?? id);
 
-  const options = ['everyone', ...names.map((n) => n.id)];
+  const options = [...(names.length >= 2 ? ['everyone'] : []), ...names.map((n) => n.id)];
 
   const toggle = (id: string) => {
     const next = selected.includes(id)
@@ -31,9 +34,9 @@ function MobileSelect({ itemID, names, selected, onChange }: MobileSelectProps) 
   const extra = selected.length - 3;
 
   return (
-    <Popover opened={opened} onChange={setOpened} position="bottom-end" withinPortal>
+    <Popover opened={opened} onChange={onOpenChange} position="bottom-end" withinPortal>
       <Popover.Target>
-        <div className="mobile-select-trigger" onClick={() => setOpened((o) => !o)}>
+        <div className="mobile-select-trigger" onClick={() => onOpenChange(!opened)}>
           {selected.length === 0 ? (
             <span className="mobile-select-placeholder">who shared?</span>
           ) : (
@@ -63,6 +66,16 @@ function MobileSelect({ itemID, names, selected, onChange }: MobileSelectProps) 
             {selected.includes(id) && <span className="mobile-select-check">✓</span>}
           </div>
         ))}
+        <div className="mobile-select-actions">
+          {hasNext && (
+            <button className="mobile-select-next" onClick={onNext}>
+              Next →
+            </button>
+          )}
+          <button className="mobile-select-done" onClick={() => onOpenChange(false)}>
+            Done
+          </button>
+        </div>
       </Popover.Dropdown>
     </Popover>
   );
@@ -84,6 +97,7 @@ export function ReceiptTable({
 }: ReceiptTableProps) {
   const [nameMatrix, setNameMatrix] = nameMatrixHook;
   const isMobile = useMediaQuery('(max-width: 640px)');
+  const [openedItemID, setOpenedItemID] = useState<string | null>(null);
 
   const itemHeaders = ['Name', 'Quantity', 'Price ($)', 'Total ($)'];
   const allNames = useMemo(() => names.map((n) => n.id), [names]);
@@ -176,10 +190,12 @@ export function ReceiptTable({
     }
   };
 
+  const showEveryone = names.length >= 2;
+
   // --- Desktop layout ---
   const desktopHeaders = [
     ...itemHeaders,
-    'Everyone',
+    ...(showEveryone ? ['Everyone'] : []),
     ...names.map((n) => n.name),
   ].map((name, idx) => <Table.Th key={idx}>{name}</Table.Th>);
 
@@ -191,12 +207,14 @@ export function ReceiptTable({
         <Table.Td>{item.Quantity}</Table.Td>
         <Table.Td><input className="cell-input cell-input--number" value={item.Price.toFixed(2)} onChange={(e) => onItemChange(itemID, 'Price', e.target.value)} /></Table.Td>
         <Table.Td>{(item.Quantity * item.Price).toFixed(2)}</Table.Td>
-        <Table.Td>
-          <Checkbox
-            checked={everyoneSetForItem.has(itemID)}
-            onChange={(e) => onEveryoneCheckboxChange(itemID, e.currentTarget.checked)}
-          />
-        </Table.Td>
+        {showEveryone && (
+          <Table.Td>
+            <Checkbox
+              checked={everyoneSetForItem.has(itemID)}
+              onChange={(e) => onEveryoneCheckboxChange(itemID, e.currentTarget.checked)}
+            />
+          </Table.Td>
+        )}
         {names.map((nameInfo) => {
           const checkboxID = `${itemID}|${nameInfo.id}`;
           return (
@@ -215,12 +233,13 @@ export function ReceiptTable({
   });
 
   // --- Mobile layout ---
-  const mobileHeaders = ['Name', 'Total', 'Shared by'].map((name, idx) => (
+  const mobileHeaders = ['Name', 'Total', ...(names.length > 0 ? ['Shared by'] : [])].map((name, idx) => (
     <Table.Th key={idx}>{name}</Table.Th>
   ));
 
   const mobileRows = parsedData.items.map((item, idx) => {
     const itemID = item.id;
+    const nextItemID = parsedData.items[idx + 1]?.id ?? null;
     const selected = everyoneSetForItem.has(itemID)
       ? ['everyone']
       : (nameMatrix[itemID] ? [...nameMatrix[itemID]] : []);
@@ -228,14 +247,20 @@ export function ReceiptTable({
       <Table.Tr key={idx}>
         <Table.Td><textarea className="cell-input cell-input--name" value={item.Name} rows={1} ref={autoResize} onInput={(e) => autoResize(e.currentTarget)} onChange={(e) => onItemChange(itemID, 'Name', e.target.value)} /></Table.Td>
         <Table.Td>{(item.Quantity * item.Price).toFixed(2)}</Table.Td>
-        <Table.Td style={{ overflow: 'visible' }}>
-          <MobileSelect
-            itemID={itemID}
-            names={names}
-            selected={selected}
-            onChange={onMobileChange}
-          />
-        </Table.Td>
+        {names.length > 0 && (
+          <Table.Td style={{ overflow: 'visible' }}>
+            <MobileSelect
+              itemID={itemID}
+              names={names}
+              selected={selected}
+              onChange={onMobileChange}
+              opened={openedItemID === itemID}
+              onOpenChange={(open) => setOpenedItemID(open ? itemID : null)}
+              hasNext={nextItemID !== null}
+              onNext={() => setOpenedItemID(nextItemID)}
+            />
+          </Table.Td>
+        )}
       </Table.Tr>
     );
   });

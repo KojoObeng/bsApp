@@ -37,10 +37,11 @@ function TaxAndTip({
             value={taxValue}
             placeholder="Tax"
             hideControls
+            inputMode="decimal"
             decimalScale={2}
-            allowNegative={false}
             fixedDecimalScale
-            onChange={() => setTaxValue}
+            allowNegative={false}
+            onChange={(val) => setTaxValue(typeof val === 'number' ? val : 0)}
           />
         </div>
         <div className={'section'}>
@@ -56,11 +57,13 @@ function TaxAndTip({
           ></SegmentedControl>
           <NumberInput
             value={tipValue}
+            placeholder="Tip"
             hideControls
+            inputMode="decimal"
             decimalScale={2}
-            allowNegative={false}
             fixedDecimalScale
-            onChange={() => setTipValue}
+            allowNegative={false}
+            onChange={(val) => setTipValue(typeof val === 'number' ? val : 0)}
           />
         </div>
       </div>

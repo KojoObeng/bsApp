@@ -25,12 +25,14 @@ function App() {
   const theme = createTheme({
   });
 
+  const [, setTaxValue] = taxValueHook;
+  const [, setTipValue] = tipValueHook;
+
   useEffect(() => {
-    const [, setTaxValue] = taxValueHook;
-    const [, setTipValue] = tipValueHook;
     setTaxValue(parsedData?.tax ?? 0);
     setTipValue(parsedData?.tip ?? 0);
-  }, [parsedData, taxValueHook, tipValueHook]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [parsedData]);
 
   const handleNameRemove = (nameID: string) => () => {
     setNames((prev) => prev.filter((nameInfo) => nameInfo.id !== nameID));
